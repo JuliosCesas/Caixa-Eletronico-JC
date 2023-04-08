@@ -1,0 +1,352 @@
+<html xmlns:mso="urn:schemas-microsoft-com:office:office" xmlns:msdt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882">
+
+<head>
+
+	<script>
+
+
+        //CONFIGURAÇÕES
+
+
+		var saldo = 70.65; //Float
+
+		var extrato = []; //array
+
+		var options = { year: undefined, month: 'numeric', day: 'numeric' }; //opções para detalhar como deve ser o resultado de - var data, nesse caso, não aparecerar o ano, pois ele está indefinido.
+
+		var data = new Date().toLocaleDateString('pt-BR', options); //data do pc do usuário, com as opções para detalhar.
+
+
+
+
+        //COMEÇO DA INTERAÇÃO COM USUÁRIO
+
+
+        var usuario = prompt("Por favor digite o seu nome");
+		
+		while (usuario.trim() == "") {//O .trim() é usado para remover os espaços em branco no início e no final de uma string. Ou seja, ele retorna uma cópia da string original sem os espaços em branco à esquerda e à direita. Ao retirar os espaços em brancos na esquerda e na direita e existir "" que é um espaço sem nada, é considerado que o usuário não digitou nenhum caractare, então nesse caso, até o usuário digitar algum caractere, irá ocorrer um loop com o prompt - var usuario.
+			
+        alert("Digite um nome");
+        usuario = prompt("Por favor digite o seu nome");
+        }
+
+		alert("Olá " + usuario + ", é um prazer ter você por aqui!");
+
+
+
+
+		//FUNÇÕES DO CAIXA ELETRÔNICO
+
+
+        //Menu iniciar com 6 opções - 1.) Saldo  2.) Extrato  3.) Saque  4.) Depósito  5.) Transferência  6.) Sair
+		function inicio() {
+
+			var escolha = parseInt(prompt('Selecione uma opção \n1.) Saldo  2.) Extrato  3.) Saque  4.) Depósito  5.) Transferência  6.) Sair'));
+            
+			switch (true){
+
+				case escolha === 1:
+				ver_saldo();
+				break;
+
+				case escolha === 2:
+				ver_extrato();
+				break;
+
+				case escolha === 3:
+				fazer_saque();
+				break;
+
+				case escolha === 4:
+				fazer_deposito();
+				break;
+
+				case escolha === 5:
+                fazer_transferencia();
+				break;
+
+				case escolha === 6:
+				sair();
+				break;
+
+				default:
+				erro();
+				break;
+
+			}
+
+	
+		}		
+
+		
+	    // Caso ocorra algum erro no Menu
+		function erro() {
+			alert('Por favor, informe um número entre 1 e 6');
+			inicio();
+		}	
+		
+		
+		//1.) Saldo
+		function ver_saldo() {
+
+			var senha = prompt("Digite a Senha");
+
+			if (senha == 3589){ //Se a senha estiver correta, o procedimento "ver_saldo" continua, senão é pedido que a senha seja informada novamente.
+
+			alert('Seu saldo atual é: R$' + saldo.toFixed(2));
+			console.log("Sem .toFixed(2) = " + saldo + "Com .toFixed(2) = " + saldo.toFixed(2));
+
+			inicio();
+
+
+			}else{
+
+             alert("A senha está incorreta, tente novamente");
+
+			 ver_saldo();
+
+			}
+		}
+
+
+        //2.) Extrato
+		function ver_extrato (){  
+
+        var senha = prompt("Digite a Senha");
+
+        if (senha == 3589){
+
+        alert("                                       EXTRATO BANCÁRIO  \n-------------------------------------------------------------------------\n AGÊNCIA: 005    -    NÚMERO DA CONTA: 35895 \n NOME DO TITULAR: " + usuario + " \n SALDO ATUAL: R$" + saldo.toFixed(2) + " \n-------------------------------------------------------------------------\n               DATA                 HISTÓRICO               VALOR R$  \n-------------------------------------------------------------------------\n               01/02                Dinheiro das fotos        300,00+\n               02/02                Material de costura         17,15-\n               03/02                Cafe                                   3,00-\n               03/02                Tecido vermelho              69,90-\n               03/02                Tecido azul                       40,35-\n               07/02                5 Esparadrapo                  47,90-\n               08/02                Peças eletrônicas              28,80-\n               08/02                Tubos de ensaio               22,25-\n" + extrato.join(''));//extrato.join para que os array serem unidos em uma única string, sem vírgulas ou outros separadores. (Para os Array não terem "," entre cada um item)
+
+		console.log("Sem .toFixed(2) = " + saldo + "Com .toFixed(2) = " + saldo.toFixed(2));
+
+
+        inicio();
+
+        }else{
+
+        alert("A senha está incorreta, tente novamente");
+
+        ver_extrato();
+
+        }
+
+        }
+	
+
+	    //3.) Saque 
+		function fazer_saque() { 
+
+			var senha = prompt("Digite a Senha");
+		
+			switch (true) {
+
+			case senha == 3589:
+
+			var saque = parseFloat(prompt('Qual o valor para saque?').replace(",", "."));
+             console.log(saque);
+
+			if (isNaN(saque) || saque === '') {
+				alert('Por favor, informe um número:');
+
+				fazer_saque();
+
+			} else if (saque <= saldo && saque > 0) {
+
+				saldo -= saque;
+
+				extrato.push("               " + data + "                Saque                                    " + saque + "-\n");
+				
+				ver_saldo();
+
+			} else if (saque > saldo){
+
+				alert("Operação não autorizada");
+
+				inicio();
+
+			} else if (saque <= 0){
+
+                alert("Operação não autorizada");
+
+				inicio();
+
+			}else{
+
+                alert("Erro, tente novamente");
+
+				inicio();
+
+			}
+			break;
+			
+            case senha != 3589:
+	
+             alert("A senha está incorreta, tente novamente");
+
+			 fazer_saque();
+
+
+		    }
+
+	    }
+
+
+		//4.) Depósito
+		function fazer_deposito() {
+
+        var senha = prompt("Digite a Senha");
+
+        switch (true) {
+
+        case senha == 3589:
+
+        var deposito = parseFloat(prompt('Qual o valor para depósito?').replace(",", "."));
+        console.log(deposito);
+
+        // Not a Number
+        if (isNaN(deposito) || deposito === '') {
+
+	    alert('Por favor, informe um número:');
+
+	    fazer_deposito();
+
+        } else if (deposito > 0) {  
+
+	    extrato.push("               " + data + "                Deposito                              " + deposito + "+\n"); //quando coloca mais de um elemento e colocado a "," resolver esse problema
+
+	    saldo += deposito;
+
+	    ver_saldo();
+
+        } else if (deposito <= 0){
+
+	    alert("Operação não autorizada");
+
+	    inicio();
+
+        } else{
+
+	    alert("Erro, tente novamente");
+
+	    inicio();
+
+        }
+        break;
+
+        case senha != 3589:
+
+        alert("A senha está incorreta, tente novamente");
+
+        fazer_deposito();
+
+        }
+
+        }
+
+
+        //5.) Transferência - parte 1
+        function fazer_transferencia(){
+
+			var senha = prompt("Digite a Senha");
+		
+			switch (true) {
+
+			case senha == 3589:
+
+			var numero_conta = prompt("Informe o número da conta");
+
+			if (isNaN(numero_conta) || numero_conta.trim() === '') {
+
+				alert('Por favor, informe um número:');
+
+                fazer_transferencia();
+
+			}else if (numero_conta >= 0){
+	
+				trasferencia();
+
+			}else{
+
+				alert('Por favor, informe um número:');
+
+                fazer_transferencia();
+			}
+			break;
+
+			case senha != 3589:
+	
+	        alert("A senha está incorreta, tente novamente");
+
+	        fazer_transferencia();
+
+            }
+
+        }
+		
+
+        //5.) Transferência - parte 2
+	    function trasferencia(){
+         
+		var valor_transferencia = parseFloat(prompt("Informe o valor da transferência.").replace(",", "."));
+		console.log(valor_transferencia);
+		
+
+	        if (valor_transferencia <= saldo && valor_transferencia > 0) {
+
+				saldo -= valor_transferencia;
+
+				extrato.push("               " + data + "                Transferência                         " + valor_transferencia + "-\n");
+
+				
+				ver_saldo();
+
+			} else if (valor_transferencia > saldo){
+
+				alert("Operação não autorizada");
+
+				inicio();
+
+			} else if (valor_transferencia <= 0){
+
+                 alert("Operação não autorizada");
+
+				inicio();
+
+			}else{
+
+                alert("Erro, tente novamente");
+
+				inicio();
+
+			}
+
+
+	}
+
+
+        //6.) Sair
+		function sair() {
+			let confirma = confirm('Você deseja sair?');
+
+			if (confirma) {
+				alert(usuario + ", foi um prazer ter você por aqui!")
+				window.close(); //Fecha a página
+			} else {
+				inicio();
+			}
+		}
+
+		inicio();
+
+
+
+	</script>
+
+
+
+<body>
+
+</body>
+
+</html>
